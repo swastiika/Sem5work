@@ -53,5 +53,5 @@ class Twoscomp:
 if __name__ == "__main__":
     s = "1001"
     print("Original:", s)
-    twos = twoscomplement(s)
+    twos = Twoscomp(s)
     print("2's Complement:", twos)

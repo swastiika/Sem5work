@@ -1,27 +1,37 @@
+
+# booths algorthm for multiplication
 from logic import *
 from nbitadd import *
 
-def nbitMul(multiplicand, multiplier, n):
+def boothsMul(multiplicand, multiplier, n):
     adder = NBitAdder(n)
-    twos = twosCompliment(multiplicand, n)
-    Q = '0'
-    multiplicand = multiplicand.zfill(n)
-    multiplier = multiplier.zfill(n)
-    accumulator = '0' * n + multiplier  # Fixed: use '0' * n instead of ''.zfill(n)
+    M = multiplicand.zfill(n)
+    negM = twosCompliment(M, n)
+    A = '0' * n
+    Q = multiplier.zfill(n)
+    Q_1 = '0'
     
-    for i in range(n):
-        if Q == '0' and accumulator[-1] == '1':
-            partial_sum, _ = adder.add(accumulator[:n], twos)
-            accumulator = partial_sum + accumulator[n:]  # Fixed: use accumulator[n:] and update accumulator
-        elif Q == '1' and accumulator[-1] == '0':
-            partial_sum, _ = adder.add(accumulator[:n], multiplicand)  # Fixed: add accumulator[:n], not multiplicand,n
-            accumulator = partial_sum + accumulator[n:]  # Fixed: use accumulator[n:] and update accumulator
+    for _ in range(n):
+        # Check Q0 and Q-1 bits
+        if Q[-1] == '1' and Q_1 == '0':
+            A, _ = adder.add(A, negM)  
+        elif Q[-1] == '0' and Q_1 == '1':
+            A, _ = adder.add(A, M)   
+        combined = A + Q + Q_1
         
-        Q = accumulator[-1]  # Fixed: update Q before shifting
-        accumulator = rightShiftSimple(accumulator, 2*n)
-        
-    return accumulator
+        sign_bit = A[0]
+        shifted = sign_bit + combined[:-1]  
+  
+        A = shifted[:n]
+        Q = shifted[n:n*2]
+        Q_1 = shifted[-1]
+    
+    return A + Q 
 
 if __name__=="__main__":
-    print(nbitMul("101","011",4))
-    
+   
+    multiplicand = '0010' 
+    multiplier = '0010'   
+    result = boothsMul(multiplicand, multiplier, 4)
+    print("Product: ", result)
+  

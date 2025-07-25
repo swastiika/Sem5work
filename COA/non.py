@@ -1,3 +1,5 @@
+
+# non restroing division method 
 from nbitadd import *
 from logic import *
 def nonRestoringDivision(dividend, divisor, n):
